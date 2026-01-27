@@ -1,0 +1,57 @@
+-- Delta Executor — AHEAD (Imagem única + Áudio)
+
+local CoreGui = game:GetService("CoreGui")
+local SoundService = game:GetService("SoundService")
+
+-- URLs RAW
+local IMAGE_URL = "https://raw.githubusercontent.com/Repos999/UNIVERSAL/main/AHEAD.jpg"
+local AUDIO_URL = "https://raw.githubusercontent.com/Repos999/UNIVERSAL/main/km_20260126_720p_60f_20260126_223034_26012026.mp3"
+
+-- 📁 WORKSPACE DO DELTA
+local FOLDER = "AHEAD"
+local IMAGE_PATH = FOLDER.."/image.jpg"
+local AUDIO_PATH = FOLDER.."/audio.mp3"
+
+-- Criar pasta
+if not isfolder(FOLDER) then
+    makefolder(FOLDER)
+end
+
+-- Baixar só se não existir
+if not isfile(IMAGE_PATH) then
+    writefile(IMAGE_PATH, game:HttpGet(IMAGE_URL))
+end
+
+if not isfile(AUDIO_PATH) then
+    writefile(AUDIO_PATH, game:HttpGet(AUDIO_URL))
+end
+
+-- Espera 5s
+task.wait(5)
+
+-- Esconder TriggerPoint AGORA
+pcall(function()
+    CoreGui.TopBarApp.TopBarApp.MenuIconHolder.TriggerPoint.Visible = false
+end)
+
+-- GUI fullscreen
+local gui = Instance.new("ScreenGui")
+gui.IgnoreGuiInset = true
+gui.DisplayOrder = 999999
+gui.Parent = CoreGui
+
+local img = Instance.new("ImageLabel")
+img.Size = UDim2.fromScale(1,1)
+img.BackgroundTransparency = 1
+img.ScaleType = Enum.ScaleType.Stretch
+img.Image = getcustomasset(IMAGE_PATH)
+img.Parent = gui
+
+-- Áudio ESTOURADO
+local sound = Instance.new("Sound")
+sound.SoundId = getcustomasset(AUDIO_PATH)
+sound.Volume = 10
+sound.PlaybackSpeed = 1.1
+sound.Looped = true
+sound.Parent = SoundService
+sound:Play()
